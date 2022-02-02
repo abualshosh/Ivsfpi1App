@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <!--
+        Added the constraints for entity Phone.
+    -->
+    <changeSet id="20220202115402-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="complain_id"
+                                 baseTableName="phone"
+                                 constraintName="fk_phone__complain_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="complain"/>
+    </changeSet>
+</databaseChangeLog>

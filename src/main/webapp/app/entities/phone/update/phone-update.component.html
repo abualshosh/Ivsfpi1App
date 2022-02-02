@@ -1,0 +1,118 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-phone-heading" data-cy="PhoneCreateUpdateHeading">Create or edit a Phone</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_imei">Imei</label>
+          <input type="text" class="form-control" name="imei" id="field_imei" data-cy="imei" formControlName="imei" />
+          <div *ngIf="editForm.get('imei')!.invalid && (editForm.get('imei')!.dirty || editForm.get('imei')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('imei')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_imei2">Imei 2</label>
+          <input type="text" class="form-control" name="imei2" id="field_imei2" data-cy="imei2" formControlName="imei2" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_brand">Brand</label>
+          <input type="text" class="form-control" name="brand" id="field_brand" data-cy="brand" formControlName="brand" />
+          <div *ngIf="editForm.get('brand')!.invalid && (editForm.get('brand')!.dirty || editForm.get('brand')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('brand')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_model">Model</label>
+          <input type="text" class="form-control" name="model" id="field_model" data-cy="model" formControlName="model" />
+          <div *ngIf="editForm.get('model')!.invalid && (editForm.get('model')!.dirty || editForm.get('model')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('model')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_color">Color</label>
+          <input type="text" class="form-control" name="color" id="field_color" data-cy="color" formControlName="color" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_descroptions">Descroptions</label>
+          <textarea
+            class="form-control"
+            name="descroptions"
+            id="field_descroptions"
+            data-cy="descroptions"
+            formControlName="descroptions"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_status">Status</label>
+          <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let phoneStatus of phoneStatusValues" [value]="phoneStatus">phoneStatus</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_verifedBy">Verifed By</label>
+          <input type="text" class="form-control" name="verifedBy" id="field_verifedBy" data-cy="verifedBy" formControlName="verifedBy" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_verifedDate">Verifed Date</label>
+          <div class="d-flex">
+            <input
+              id="field_verifedDate"
+              data-cy="verifedDate"
+              type="datetime-local"
+              class="form-control"
+              name="verifedDate"
+              formControlName="verifedDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="field_complain">Complain</label>
+          <select class="form-control" id="field_complain" data-cy="complain" name="complain" formControlName="complain">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="complainOption.id === editForm.get('complain')!.value?.id ? editForm.get('complain')!.value : complainOption"
+              *ngFor="let complainOption of complainsSharedCollection; trackBy: trackComplainById"
+            >
+              {{ complainOption.id }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

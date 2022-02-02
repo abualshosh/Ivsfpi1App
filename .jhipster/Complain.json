@@ -1,0 +1,52 @@
+{
+  "applications": "*",
+  "changelogDate": "20220202115401",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "complain",
+  "fields": [
+    {
+      "fieldName": "complainNumber",
+      "fieldType": "UUID"
+    },
+    {
+      "fieldName": "descpcription",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "ownerName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "ownerPhone",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "ownerID",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "idType",
+      "fieldType": "IdType",
+      "fieldValues": "DERIVER,NATIONAL_NUMBER,ID_CARD"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "Complain",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "phone",
+      "otherEntityRelationshipName": "complain",
+      "relationshipName": "phone",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "service": "serviceClass"
+}

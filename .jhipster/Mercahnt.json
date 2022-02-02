@@ -1,0 +1,38 @@
+{
+  "applications": "*",
+  "changelogDate": "20220202115403",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "mercahnt",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "address",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "phoneNumber",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "Mercahnt",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "mercahnt",
+      "relationshipName": "user",
+      "ownerSide": true,
+      "useJPADerivedIdentifier": true,
+      "id": true
+    }
+  ],
+  "service": "serviceClass"
+}

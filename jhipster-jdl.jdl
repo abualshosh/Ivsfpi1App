@@ -1,0 +1,50 @@
+
+
+enum IdType{
+	DERIVER, NATIONAL_NUMBER, ID_CARD
+}
+
+entity Complain {
+	complainNumber UUID,
+    descpcription TextBlob,
+    ownerName String required,
+    ownerPhone String required,
+    ownerID String required,
+    idType IdType
+
+}
+
+entity Phone {
+	imei String required,
+    imei2 String,
+    brand String required,
+    model String required,
+    color String,
+    descroptions TextBlob,
+    status PhoneStatus,
+    verifedBy String,
+    verifedDate Instant	
+
+}
+enum PhoneStatus {
+	STOLEN, VERVIED, FOUNDED, OTHERS
+}
+
+
+entity Mercahnt {
+	name String,
+    address String,
+    phoneNumber String
+}
+
+
+relationship OneToOne {
+	Mercahnt to User with jpaDerivedIdentifier
+}
+
+relationship OneToMany {
+	Complain to Phone
+}
+
+paginate * with pagination
+filter *

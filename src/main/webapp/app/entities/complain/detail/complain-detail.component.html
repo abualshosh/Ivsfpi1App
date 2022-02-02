@@ -1,0 +1,52 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="complain">
+      <h2 data-cy="complainDetailsHeading"><span>Complain</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ complain.id }}</span>
+        </dd>
+        <dt><span>Complain Number</span></dt>
+        <dd>
+          <span>{{ complain.complainNumber }}</span>
+        </dd>
+        <dt><span>Descpcription</span></dt>
+        <dd>
+          <span>{{ complain.descpcription }}</span>
+        </dd>
+        <dt><span>Owner Name</span></dt>
+        <dd>
+          <span>{{ complain.ownerName }}</span>
+        </dd>
+        <dt><span>Owner Phone</span></dt>
+        <dd>
+          <span>{{ complain.ownerPhone }}</span>
+        </dd>
+        <dt><span>Owner ID</span></dt>
+        <dd>
+          <span>{{ complain.ownerID }}</span>
+        </dd>
+        <dt><span>Id Type</span></dt>
+        <dd>
+          <span>{{ complain.idType }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/complain', complain.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

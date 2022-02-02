@@ -1,0 +1,64 @@
+{
+  "applications": "*",
+  "changelogDate": "20220202115402",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "phone",
+  "fields": [
+    {
+      "fieldName": "imei",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "imei2",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "brand",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "model",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "color",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "descroptions",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "PhoneStatus",
+      "fieldValues": "STOLEN,VERVIED,FOUNDED,OTHERS"
+    },
+    {
+      "fieldName": "verifedBy",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "verifedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "Phone",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "complain",
+      "otherEntityRelationshipName": "phone",
+      "relationshipName": "complain",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceClass"
+}
