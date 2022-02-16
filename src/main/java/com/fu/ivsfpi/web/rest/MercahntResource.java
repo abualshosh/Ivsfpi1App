@@ -1,13 +1,19 @@
 package com.fu.ivsfpi.web.rest;
 
 import com.fu.ivsfpi.domain.Mercahnt;
+import com.fu.ivsfpi.domain.User;
 import com.fu.ivsfpi.repository.MercahntRepository;
 import com.fu.ivsfpi.service.MercahntQueryService;
 import com.fu.ivsfpi.service.MercahntService;
+import com.fu.ivsfpi.service.UserService;
 import com.fu.ivsfpi.service.criteria.MercahntCriteria;
+import com.fu.ivsfpi.service.dto.AdminUserDTO;
+import com.fu.ivsfpi.service.dto.MerchantUserDTO;
+import com.fu.ivsfpi.service.dto.UserDTO;
 import com.fu.ivsfpi.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -44,14 +50,18 @@ public class MercahntResource {
 
     private final MercahntQueryService mercahntQueryService;
 
+    private final UserService userService;
+
     public MercahntResource(
         MercahntService mercahntService,
         MercahntRepository mercahntRepository,
-        MercahntQueryService mercahntQueryService
+        MercahntQueryService mercahntQueryService,
+        UserService userService
     ) {
         this.mercahntService = mercahntService;
         this.mercahntRepository = mercahntRepository;
         this.mercahntQueryService = mercahntQueryService;
+        this.userService = userService;
     }
 
     /**
@@ -204,5 +214,39 @@ public class MercahntResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PostMapping("/merchant/user")
+    public ResponseEntity<Mercahnt> createFullMerchant(@RequestBody MerchantUserDTO merchantUserDTO) throws URISyntaxException {
+        System.out.println("====================================" + merchantUserDTO.toString() + "=====================================");
+        Optional<AdminUserDTO> adminUserDTO = Optional.of(new AdminUserDTO());
+        Optional<User> newUser;
+        Mercahnt result = new Mercahnt();
+
+        if (merchantUserDTO == null) {
+            throw new BadRequestAlertException("cant be empty", "jkfgfjg", "kdhgjkdg");
+        } else {
+            adminUserDTO.get().setLogin(merchantUserDTO.getLogin());
+            adminUserDTO.get().setEmail(merchantUserDTO.getEmail());
+            adminUserDTO.get().setFirstName(merchantUserDTO.getFirstName());
+            adminUserDTO.get().setLastName(merchantUserDTO.getLastName());
+            adminUserDTO.get().setActivated(true);
+            adminUserDTO.get().setCreatedDate(Instant.now());
+            adminUserDTO.get().setAuthorities(merchantUserDTO.getAuthorities());
+            newUser = Optional.ofNullable(userService.registerUser(adminUserDTO.get(), "1234"));
+
+            if (newUser.isPresent()) {
+                result.setUser(newUser.get());
+                result.setName(newUser.get().getFirstName() + " " + newUser.get().getLastName());
+                result.setAddress(merchantUserDTO.getAddress());
+                result.setPhoneNumber(merchantUserDTO.getPhoneNumber());
+                result = mercahntService.save(result);
+            }
+        }
+
+        return ResponseEntity
+            .created(new URI("/api/mercahnts/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 }
