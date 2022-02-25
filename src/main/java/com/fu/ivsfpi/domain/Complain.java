@@ -51,7 +51,7 @@ public class Complain implements Serializable {
 
     @OneToMany(mappedBy = "complain")
     @JsonIgnoreProperties(value = { "complain" }, allowSetters = true)
-    private Set<Phone> phones = new HashSet<>();
+    public Set<Phone> phones = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 

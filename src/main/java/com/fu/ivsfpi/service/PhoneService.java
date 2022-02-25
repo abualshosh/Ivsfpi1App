@@ -2,7 +2,10 @@ package com.fu.ivsfpi.service;
 
 import com.fu.ivsfpi.domain.Phone;
 import com.fu.ivsfpi.repository.PhoneRepository;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -34,6 +37,11 @@ public class PhoneService {
     public Phone save(Phone phone) {
         log.debug("Request to save Phone : {}", phone);
         return phoneRepository.save(phone);
+    }
+
+    public List<Phone> saveAll(Set<Phone> phones) {
+        log.debug("Request to save Phone : {}", phones);
+        return phoneRepository.saveAll(phones);
     }
 
     /**
@@ -103,6 +111,18 @@ public class PhoneService {
     public Optional<Phone> findOne(Long id) {
         log.debug("Request to get Phone : {}", id);
         return phoneRepository.findById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Phone> findOneByImei(String imei) {
+        log.debug("Request to get Phone : {}", imei);
+        return phoneRepository.findOneByImeiOrImei2(imei, imei);
+    }
+
+    @Transactional(readOnly = true)
+    public Set<Phone> findAllByImeiOrImei2(String imei) {
+        String imei2 = imei;
+        return phoneRepository.findAllByImeiOrImei2(imei, imei2);
     }
 
     /**

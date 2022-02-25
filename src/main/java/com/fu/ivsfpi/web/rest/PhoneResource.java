@@ -198,4 +198,11 @@ public class PhoneResource {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
     }
+
+    @GetMapping("/phone/{imei}")
+    public ResponseEntity<Phone> getPhoneByImei(@PathVariable String imei) {
+        log.debug("Request to get phone by Imei :{}", imei);
+        Optional<Phone> phone = phoneService.findOneByImei(imei);
+        return ResponseUtil.wrapOrNotFound(phone);
+    }
 }

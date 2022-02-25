@@ -7,6 +7,7 @@ import java.time.Instant;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.UniqueElements;
 
 /**
  * A Phone.

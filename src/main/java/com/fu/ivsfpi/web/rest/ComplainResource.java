@@ -1,16 +1,18 @@
 package com.fu.ivsfpi.web.rest;
 
 import com.fu.ivsfpi.domain.Complain;
+import com.fu.ivsfpi.domain.Phone;
 import com.fu.ivsfpi.repository.ComplainRepository;
 import com.fu.ivsfpi.service.ComplainQueryService;
 import com.fu.ivsfpi.service.ComplainService;
+import com.fu.ivsfpi.service.PhoneService;
 import com.fu.ivsfpi.service.criteria.ComplainCriteria;
+import com.fu.ivsfpi.service.dto.PhoneComplainDTO;
 import com.fu.ivsfpi.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -46,14 +48,18 @@ public class ComplainResource {
 
     private final ComplainQueryService complainQueryService;
 
+    private final PhoneService phoneService;
+
     public ComplainResource(
         ComplainService complainService,
         ComplainRepository complainRepository,
-        ComplainQueryService complainQueryService
+        ComplainQueryService complainQueryService,
+        PhoneService phoneService
     ) {
         this.complainService = complainService;
         this.complainRepository = complainRepository;
         this.complainQueryService = complainQueryService;
+        this.phoneService = phoneService;
     }
 
     /**
@@ -203,5 +209,50 @@ public class ComplainResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PostMapping("/complain/phones")
+    public ResponseEntity<Complain> createComplainWithPhones(@RequestBody PhoneComplainDTO phoneComplainDTO) throws URISyntaxException {
+        Set<Phone> phones = new HashSet<Phone>();
+        Complain complain = new Complain();
+
+        complain.setComplainNumber(UUID.randomUUID());
+        complain.setDescpcription(phoneComplainDTO.getDescpcription());
+        complain.setOwnerName(phoneComplainDTO.getOwnerName());
+        complain.setOwnerPhone(phoneComplainDTO.getOwnerPhone());
+        complain.setIdType(phoneComplainDTO.getIdType());
+        complain.setOwnerID(phoneComplainDTO.getOwnerID());
+
+        if (phoneComplainDTO.getPhones().isEmpty()) {
+            throw new BadRequestAlertException("should have one phone ", "", "");
+        } else {
+            phoneComplainDTO
+                .getPhones()
+                .forEach(phone1 -> {
+                    String imei = phone1.getImei();
+                    String imei2 = phone1.getImei2();
+                    Optional<Phone> phone2 = phoneService.findOneByImei(imei);
+                    Optional<Phone> phone3 = phoneService.findOneByImei(imei2);
+                    if (phone2.isPresent() || phone3.isPresent()) {
+                        throw new BadRequestAlertException(
+                            "imei already exist",
+                            "bad request",
+                            "imei2 :" + phone1.getImei2() + "imei1 :" + phone1.getImei()
+                        );
+                    }
+                    phones.add(phone1);
+                });
+            complain.setPhones(new HashSet<>(phoneService.saveAll(phones)));
+        }
+
+        log.debug("========" + complain.getPhones() + "===================");
+        Complain resualt = complainService.save(complain);
+
+        log.debug("==================================" + complain.toString() + "==============================");
+        return ResponseEntity
+            .created(new URI("/api/complains/" + resualt.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, resualt.getId().toString()))
+            .body(resualt);
+        //           return null;
     }
 }
