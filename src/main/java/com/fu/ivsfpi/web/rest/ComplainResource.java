@@ -222,6 +222,7 @@ public class ComplainResource {
         complain.setOwnerPhone(phoneComplainDTO.getOwnerPhone());
         complain.setIdType(phoneComplainDTO.getIdType());
         complain.setOwnerID(phoneComplainDTO.getOwnerID());
+        Complain resualt = complainService.save(complain);
 
         if (phoneComplainDTO.getPhones().isEmpty()) {
             throw new BadRequestAlertException("should have one phone ", "", "");
@@ -242,13 +243,16 @@ public class ComplainResource {
                     }
                     phones.add(phone1);
                 });
-            complain.setPhones(new HashSet<>(phoneService.saveAll(phones)));
+
         }
 
-        log.debug("========" + complain.getPhones() + "===================");
-        Complain resualt = complainService.save(complain);
+        phones.forEach(phone -> {
+            phone.setComplain(complain);
+            phoneService.save(phone);
+        });
 
-        log.debug("==================================" + complain.toString() + "==============================");
+
+        log.debug("==================================" + complain + "==============================");
         return ResponseEntity
             .created(new URI("/api/complains/" + resualt.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, resualt.getId().toString()))
