@@ -220,11 +220,11 @@ public class MercahntResource {
     public ResponseEntity<Mercahnt> createFullMerchant(@RequestBody MerchantUserDTO merchantUserDTO) throws URISyntaxException {
         System.out.println("====================================" + merchantUserDTO.toString() + "=====================================");
         Optional<AdminUserDTO> adminUserDTO = Optional.of(new AdminUserDTO());
-        Optional<User> newUser;
+
         Mercahnt result = new Mercahnt();
 
         if (merchantUserDTO == null) {
-            throw new BadRequestAlertException("cant be empty", "jkfgfjg", "kdhgjkdg");
+            throw new BadRequestAlertException("cant be empty", "404", "400");
         } else {
             adminUserDTO.get().setLogin(merchantUserDTO.getLogin());
             adminUserDTO.get().setEmail(merchantUserDTO.getEmail());
@@ -233,7 +233,7 @@ public class MercahntResource {
             adminUserDTO.get().setActivated(true);
             adminUserDTO.get().setCreatedDate(Instant.now());
             adminUserDTO.get().setAuthorities(merchantUserDTO.getAuthorities());
-            newUser = Optional.ofNullable(userService.registerUser(adminUserDTO.get(), "1234"));
+            Optional<User> newUser = Optional.ofNullable(userService.registerUser(adminUserDTO.get(), "1234"));
 
             if (newUser.isPresent()) {
                 result.setUser(newUser.get());
