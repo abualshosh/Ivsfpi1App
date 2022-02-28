@@ -1,6 +1,7 @@
 package com.fu.ivsfpi.repository;
 
 import com.fu.ivsfpi.domain.Mercahnt;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface MercahntRepository extends JpaRepository<Mercahnt, Long>, JpaSpecificationExecutor<Mercahnt> {}
+public interface MercahntRepository extends JpaRepository<Mercahnt, Long>, JpaSpecificationExecutor<Mercahnt> {
+    Optional<Mercahnt> findByUserLogin(String login);
+}

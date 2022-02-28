@@ -1,11 +1,15 @@
 package com.fu.ivsfpi.service;
 
+import com.fu.ivsfpi.domain.Complain;
+import com.fu.ivsfpi.domain.Mercahnt;
 import com.fu.ivsfpi.domain.Phone;
+import com.fu.ivsfpi.domain.enumeration.PhoneStatus;
 import com.fu.ivsfpi.repository.PhoneRepository;
+import com.fu.ivsfpi.web.rest.errors.BadRequestAlertException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -24,8 +28,11 @@ public class PhoneService {
 
     private final PhoneRepository phoneRepository;
 
-    public PhoneService(PhoneRepository phoneRepository) {
+    private final MercahntService mercahntService;
+
+    public PhoneService(PhoneRepository phoneRepository, MercahntService mercahntService) {
         this.phoneRepository = phoneRepository;
+        this.mercahntService = mercahntService;
     }
 
     /**
@@ -116,7 +123,20 @@ public class PhoneService {
     @Transactional(readOnly = true)
     public Optional<Phone> findOneByImei(String imei) {
         log.debug("Request to get Phone : {}", imei);
-        return phoneRepository.findOneByImeiOrImei2(imei, imei);
+        Optional<Phone> phone = phoneRepository.findOneByImeiOrImei2(imei, imei);
+        Optional<Mercahnt> mercahnt = mercahntService.findCurrentMerchant();
+        log.debug(mercahnt.toString());
+        if (phone.isPresent() && mercahnt.isPresent()) {
+            //
+
+            phone.get().setVerifedBy(mercahnt.get().getName());
+
+            phone.get().setVerifedDate(Instant.now());
+
+            phone.get().setStatus(PhoneStatus.VERVIED);
+            phoneRepository.save(phone.get());
+        }
+        return phone;
     }
 
     @Transactional(readOnly = true)

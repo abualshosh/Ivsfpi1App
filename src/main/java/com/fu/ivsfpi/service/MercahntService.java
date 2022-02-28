@@ -3,6 +3,7 @@ package com.fu.ivsfpi.service;
 import com.fu.ivsfpi.domain.Mercahnt;
 import com.fu.ivsfpi.repository.MercahntRepository;
 import com.fu.ivsfpi.repository.UserRepository;
+import com.fu.ivsfpi.security.SecurityUtils;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,5 +102,11 @@ public class MercahntService {
     public void delete(Long id) {
         log.debug("Request to delete Mercahnt : {}", id);
         mercahntRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Mercahnt> findCurrentMerchant() {
+        log.debug("Request to get current Profile");
+        return mercahntRepository.findById(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin().get()).get().getId());
     }
 }
