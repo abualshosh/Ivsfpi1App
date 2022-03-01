@@ -6,6 +6,7 @@ import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IMercahnt, getMercahntIdentifier } from '../mercahnt.model';
+import { MerchantUserDto } from '../update/merchantUserDTO.model';
 
 export type EntityResponseType = HttpResponse<IMercahnt>;
 export type EntityArrayResponseType = HttpResponse<IMercahnt[]>;
@@ -14,12 +15,15 @@ export type EntityArrayResponseType = HttpResponse<IMercahnt[]>;
 export class MercahntService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/mercahnts');
 
-  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
+  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) { }
 
   create(mercahnt: IMercahnt): Observable<EntityResponseType> {
     return this.http.post<IMercahnt>(this.resourceUrl, mercahnt, { observe: 'response' });
   }
 
+  createWithUser(mercahnt: MerchantUserDto): Observable<EntityResponseType> {
+    return this.http.post<MerchantUserDto>(this.resourceUrl + '/user', mercahnt, { observe: 'response' });
+  }
   update(mercahnt: IMercahnt): Observable<EntityResponseType> {
     return this.http.put<IMercahnt>(`${this.resourceUrl}/${getMercahntIdentifier(mercahnt) as number}`, mercahnt, { observe: 'response' });
   }
