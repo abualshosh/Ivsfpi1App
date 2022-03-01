@@ -120,15 +120,13 @@ public class PhoneService {
         return phoneRepository.findById(id);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<Phone> findOneByImei(String imei) {
         log.debug("Request to get Phone : {}", imei);
         Optional<Phone> phone = phoneRepository.findOneByImeiOrImei2(imei, imei);
         log.debug("========================= " + phone.toString() +" =======================");
         Optional<Mercahnt> mercahnt = mercahntService.findCurrentMerchant();
-        log.debug(mercahnt.toString());
         if (phone.isPresent() && mercahnt.isPresent()) {
-            //
 
             phone.get().setVerifedBy(mercahnt.get().getName());
 
@@ -136,7 +134,6 @@ public class PhoneService {
 
             phone.get().setStatus(PhoneStatus.VERVIED);
             phone = Optional.of(phoneRepository.saveAndFlush(phone.get()));
-            log.debug(phone.get().toString());
         }
         return phone;
     }
