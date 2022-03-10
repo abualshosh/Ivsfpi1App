@@ -6,7 +6,7 @@ import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IMercahnt, getMercahntIdentifier } from '../mercahnt.model';
-import { MerchantUserDto } from '../update/merchantUserDTO.model';
+import { IMerchantUserDto, MerchantUserDto } from '../update/merchantUserDTO.model';
 
 export type EntityResponseType = HttpResponse<IMercahnt>;
 export type EntityArrayResponseType = HttpResponse<IMercahnt[]>;
@@ -21,8 +21,8 @@ export class MercahntService {
     return this.http.post<IMercahnt>(this.resourceUrl, mercahnt, { observe: 'response' });
   }
 
-  createWithUser(mercahnt: MerchantUserDto): Observable<EntityResponseType> {
-    return this.http.post<MerchantUserDto>(this.resourceUrl + '/user', mercahnt, { observe: 'response' });
+  createWithUser(mercahnt: IMerchantUserDto): Observable<HttpResponse<IMerchantUserDto>> {
+    return this.http.post<IMerchantUserDto>('api/merchant/user', mercahnt, { observe: 'response' });
   }
   update(mercahnt: IMercahnt): Observable<EntityResponseType> {
     return this.http.put<IMercahnt>(`${this.resourceUrl}/${getMercahntIdentifier(mercahnt) as number}`, mercahnt, { observe: 'response' });

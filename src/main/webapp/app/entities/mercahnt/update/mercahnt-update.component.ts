@@ -9,6 +9,7 @@ import { IMercahnt, Mercahnt } from '../mercahnt.model';
 import { MercahntService } from '../service/mercahnt.service';
 import { IUser } from 'app/entities/user/user.model';
 import { UserService } from 'app/entities/user/user.service';
+import { IMerchantUserDto, MerchantUserDto } from './merchantUserDTO.model';
 
 @Component({
   selector: 'jhi-mercahnt-update',
@@ -17,28 +18,26 @@ import { UserService } from 'app/entities/user/user.service';
 export class MercahntUpdateComponent implements OnInit {
   isSaving = false;
 
-  usersSharedCollection: IUser[] = [];
 
   editForm = this.fb.group({
-    id: [],
-    name: [],
     address: [],
     phoneNumber: [],
-    user: [],
+    firstName: [],
+    lastName: [],
+    email: [],
+
   });
 
   constructor(
     protected mercahntService: MercahntService,
-    protected userService: UserService,
     protected activatedRoute: ActivatedRoute,
     protected fb: FormBuilder
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ mercahnt }) => {
       this.updateForm(mercahnt);
 
-      this.loadRelationshipsOptions();
     });
   }
 
@@ -49,18 +48,18 @@ export class MercahntUpdateComponent implements OnInit {
   save(): void {
     this.isSaving = true;
     const mercahnt = this.createFromForm();
-    if (mercahnt.id !== undefined) {
-      this.subscribeToSaveResponse(this.mercahntService.update(mercahnt));
-    } else {
-      this.subscribeToSaveResponse(this.mercahntService.create(mercahnt));
-    }
+    // if (mercahnt.id !== undefined) {
+    //   this.subscribeToSaveResponse(this.mercahntService.update(mercahnt));
+    // } else {
+    this.subscribeToSaveResponse(this.mercahntService.createWithUser(mercahnt));
+    // }
   }
 
   trackUserById(index: number, item: IUser): number {
     return item.id!;
   }
 
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<IMercahnt>>): void {
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IMerchantUserDto>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: () => this.onSaveSuccess(),
       error: () => this.onSaveError(),
@@ -88,25 +87,20 @@ export class MercahntUpdateComponent implements OnInit {
       user: mercahnt.user,
     });
 
-    this.usersSharedCollection = this.userService.addUserToCollectionIfMissing(this.usersSharedCollection, mercahnt.user);
   }
 
-  protected loadRelationshipsOptions(): void {
-    this.userService
-      .query()
-      .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
-      .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing(users, this.editForm.get('user')!.value)))
-      .subscribe((users: IUser[]) => (this.usersSharedCollection = users));
-  }
 
-  protected createFromForm(): IMercahnt {
+
+  protected createFromForm(): IMerchantUserDto {
     return {
-      ...new Mercahnt(),
-      id: this.editForm.get(['id'])!.value,
-      name: this.editForm.get(['name'])!.value,
-      address: this.editForm.get(['address'])!.value,
-      phoneNumber: this.editForm.get(['phoneNumber'])!.value,
-      user: this.editForm.get(['user'])!.value,
+      ...new MerchantUserDto(
+        this.editForm.get(['email'])?.value,
+        this.editForm.get(['firstName'])?.value,
+        this.editForm.get(['lastName'])?.value,
+        this.editForm.get(['phoneNumber'])?.value,
+        this.editForm.get(['address'])?.value,
+        this.editForm.get(['phoneNumber'])?.value,
+      ),
     };
   }
 }
