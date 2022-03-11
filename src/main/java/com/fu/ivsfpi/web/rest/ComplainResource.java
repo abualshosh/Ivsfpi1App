@@ -2,6 +2,7 @@ package com.fu.ivsfpi.web.rest;
 
 import com.fu.ivsfpi.domain.Complain;
 import com.fu.ivsfpi.domain.Phone;
+import com.fu.ivsfpi.domain.enumeration.PhoneStatus;
 import com.fu.ivsfpi.repository.ComplainRepository;
 import com.fu.ivsfpi.service.ComplainQueryService;
 import com.fu.ivsfpi.service.ComplainService;
@@ -234,13 +235,13 @@ public class ComplainResource {
                     String imei2 = phone1.getImei2();
                     Optional<Phone> phone2 = phoneService.findOneByImei(imei);
                     Optional<Phone> phone3 = phoneService.findOneByImei(imei2);
-                    if (phone2.isPresent() || phone3.isPresent()) {
-                        throw new BadRequestAlertException(
-                            "imei already exist",
-                            "bad request",
-                            "imei2 :" + phone1.getImei2() + "imei1 :" + phone1.getImei()
-                        );
-                    }
+                        if (phone2.isPresent() || phone3.isPresent()) {
+                            throw new BadRequestAlertException(
+                                    "imei already exist",
+                                    "bad request",
+                                    "imei2 :" + phone1.getImei2() + "imei1 :" + phone1.getImei());
+                        }
+                    phone1.setStatus(PhoneStatus.STOLEN);
                     phones.add(phone1);
                 });
 
