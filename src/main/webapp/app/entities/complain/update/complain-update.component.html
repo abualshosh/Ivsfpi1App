@@ -6,86 +6,111 @@
       <div>
         <jhi-alert-error></jhi-alert-error>
 
-        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
-          <label class="form-control-label" for="field_id">ID</label>
-          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
-        </div>
+        <table class="table table-bordered" formArrayName="phones">
+          <tr>
+            <th colspan="2">Add Multiple Item:</th>
+            <th width="150px"><button nbButton type="button" (click)="addPhone()">Add More</button>
+            </th>
+          </tr>
+          <tr *ngFor="let item of phones().controls; let i=index" [formGroupName]="i">
+            <td>
+              imei :
+              <input type="text" formControlName="imei" class="form-control">
+            </td>
+            <td>
+              imei2
+              <input type="text" formControlName="2" class="form-control">
+            </td>
+            <td>
+              brand:
+              <input type="text" formControlName="brand" class="form-control">
+            </td>
+            <td>
+              model:
+              <input type="text" formControlName="model" class="form-control">
+            </td>
 
-        <div class="form-group">
-          <label class="form-control-label" for="field_complainNumber">Complain Number</label>
-          <input
-            type="text"
-            class="form-control"
-            name="complainNumber"
-            id="field_complainNumber"
-            data-cy="complainNumber"
-            formControlName="complainNumber"
-          />
-        </div>
+            <td>
+              color:
+              <input type="text" formControlName="color" class="form-control">
+            </td>
+
+            <td>
+              <button (click)="removePhone(i)" class="btn btn-danger">Remove</button>
+            </td>
+          </tr>
+        </table>
+
+
 
         <div class="form-group">
           <label class="form-control-label" for="field_descpcription">Descpcription</label>
-          <textarea
-            class="form-control"
-            name="descpcription"
-            id="field_descpcription"
-            data-cy="descpcription"
-            formControlName="descpcription"
-          ></textarea>
+          <textarea class="form-control" name="descpcription" id="field_descpcription" data-cy="descpcription"
+            formControlName="descpcription"></textarea>
         </div>
 
         <div class="form-group">
           <label class="form-control-label" for="field_ownerName">Owner Name</label>
-          <input type="text" class="form-control" name="ownerName" id="field_ownerName" data-cy="ownerName" formControlName="ownerName" />
-          <div *ngIf="editForm.get('ownerName')!.invalid && (editForm.get('ownerName')!.dirty || editForm.get('ownerName')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('ownerName')?.errors?.required"> This field is required. </small>
+          <input type="text" class="form-control" name="ownerName" id="field_ownerName" data-cy="ownerName"
+            formControlName="ownerName" />
+          <div
+            *ngIf="editForm.get('ownerName')!.invalid && (editForm.get('ownerName')!.dirty || editForm.get('ownerName')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('ownerName')?.errors?.required"> This field is
+              required. </small>
           </div>
         </div>
 
         <div class="form-group">
           <label class="form-control-label" for="field_ownerPhone">Owner Phone</label>
-          <input
-            type="text"
-            class="form-control"
-            name="ownerPhone"
-            id="field_ownerPhone"
-            data-cy="ownerPhone"
-            formControlName="ownerPhone"
-          />
-          <div *ngIf="editForm.get('ownerPhone')!.invalid && (editForm.get('ownerPhone')!.dirty || editForm.get('ownerPhone')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('ownerPhone')?.errors?.required"> This field is required. </small>
+          <input type="text" class="form-control" name="ownerPhone" id="field_ownerPhone" data-cy="ownerPhone"
+            formControlName="ownerPhone" />
+          <div
+            *ngIf="editForm.get('ownerPhone')!.invalid && (editForm.get('ownerPhone')!.dirty || editForm.get('ownerPhone')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('ownerPhone')?.errors?.required"> This field is
+              required. </small>
           </div>
         </div>
 
         <div class="form-group">
           <label class="form-control-label" for="field_ownerID">Owner ID</label>
-          <input type="text" class="form-control" name="ownerID" id="field_ownerID" data-cy="ownerID" formControlName="ownerID" />
-          <div *ngIf="editForm.get('ownerID')!.invalid && (editForm.get('ownerID')!.dirty || editForm.get('ownerID')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('ownerID')?.errors?.required"> This field is required. </small>
+          <input type="text" class="form-control" name="ownerID" id="field_ownerID" data-cy="ownerID"
+            formControlName="ownerID" />
+          <div
+            *ngIf="editForm.get('ownerID')!.invalid && (editForm.get('ownerID')!.dirty || editForm.get('ownerID')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('ownerID')?.errors?.required"> This field is
+              required. </small>
           </div>
         </div>
+
+
 
         <div class="form-group">
           <label class="form-control-label" for="field_idType">Id Type</label>
           <select class="form-control" name="idType" formControlName="idType" id="field_idType" data-cy="idType">
-            <option [ngValue]="null"></option>
-            <option *ngFor="let idType of idTypeValues" [value]="idType">idType</option>
+            <option value="" selected></option>
+            <option value="DERIVER">DERIVER</option>
+            <option value="NATIONAL_NUMBER">NATIONAL_NUMBER</option>
+            <option value="ID_CARD">ID_CARD</option>
+
           </select>
         </div>
       </div>
 
+
+
+
+      <!-- <button id="save-entity" data-cy="entityCreateSaveButton" class="btn btn-primary">
+        <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+      </button> -->
+
       <div>
-        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary"
+          (click)="previousState()">
           <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
         </button>
 
-        <button
-          type="submit"
-          id="save-entity"
-          data-cy="entityCreateSaveButton"
-          [disabled]="editForm.invalid || isSaving"
-          class="btn btn-primary"
-        >
+        <button type="submit" id="save-entity" data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
           <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
         </button>
       </div>

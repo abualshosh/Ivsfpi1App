@@ -42,6 +42,9 @@
     "skipUserManagement": false,
     "testFrameworks": [],
     "websocket": false,
-    "withAdminUi": true
+    "withAdminUi": true,
+    "herokuAppName": "ivsfpi-1",
+    "herokuDeployType": "git",
+    "herokuJavaVersion": "14"
   }
 }

@@ -14,10 +14,10 @@ export type EntityArrayResponseType = HttpResponse<IComplain[]>;
 export class ComplainService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/complains');
 
-  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
+  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) { }
 
   create(complain: IComplain): Observable<EntityResponseType> {
-    return this.http.post<IComplain>(this.resourceUrl, complain, { observe: 'response' });
+    return this.http.post<IComplain>('api/complain/phones', complain, { observe: 'response' });
   }
 
   update(complain: IComplain): Observable<EntityResponseType> {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
@@ -10,7 +10,6 @@ import { ComplainService } from '../service/complain.service';
 import { AlertError } from 'app/shared/alert/alert-error.model';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
-import { IdType } from 'app/entities/enumerations/id-type.model';
 
 @Component({
   selector: 'jhi-complain-update',
@@ -18,7 +17,7 @@ import { IdType } from 'app/entities/enumerations/id-type.model';
 })
 export class ComplainUpdateComponent implements OnInit {
   isSaving = false;
-  idTypeValues = Object.keys(IdType);
+
 
   editForm = this.fb.group({
     id: [],
@@ -28,6 +27,8 @@ export class ComplainUpdateComponent implements OnInit {
     ownerPhone: [null, [Validators.required]],
     ownerID: [null, [Validators.required]],
     idType: [],
+    phones: this.fb.array([]),
+
   });
 
   constructor(
@@ -36,9 +37,36 @@ export class ComplainUpdateComponent implements OnInit {
     protected complainService: ComplainService,
     protected activatedRoute: ActivatedRoute,
     protected fb: FormBuilder
-  ) {}
+  ) { }
 
+
+  phones(): FormArray {
+    return this.editForm.get('phones') as FormArray;
+  }
+  newPhone(): FormGroup {
+    return this.fb.group({
+      imei: [null, [Validators.required]],
+      imei2: [],
+      brand: [null, [Validators.required]],
+      model: [null, [Validators.required]],
+      color: [],
+    })
+
+  }
+  addPhone(): void {
+    this.phones().push(this.newPhone());
+  }
+
+  removePhone(i: number): void {
+    this.phones().removeAt(i);
+  }
   ngOnInit(): void {
+    this.editForm.get("idType")?.valueChanges.subscribe(v => {
+      console.log(v);
+
+    })
+    // console.log();
+
     this.activatedRoute.data.subscribe(({ complain }) => {
       this.updateForm(complain);
     });
@@ -95,7 +123,6 @@ export class ComplainUpdateComponent implements OnInit {
   protected updateForm(complain: IComplain): void {
     this.editForm.patchValue({
       id: complain.id,
-      complainNumber: complain.complainNumber,
       descpcription: complain.descpcription,
       ownerName: complain.ownerName,
       ownerPhone: complain.ownerPhone,
@@ -107,13 +134,12 @@ export class ComplainUpdateComponent implements OnInit {
   protected createFromForm(): IComplain {
     return {
       ...new Complain(),
-      id: this.editForm.get(['id'])!.value,
-      complainNumber: this.editForm.get(['complainNumber'])!.value,
       descpcription: this.editForm.get(['descpcription'])!.value,
       ownerName: this.editForm.get(['ownerName'])!.value,
       ownerPhone: this.editForm.get(['ownerPhone'])!.value,
       ownerID: this.editForm.get(['ownerID'])!.value,
       idType: this.editForm.get(['idType'])!.value,
+      phones: this.editForm.get(['phones'])?.value
     };
   }
 }
