@@ -3,20 +3,19 @@ package com.fu.ivsfpi.web.rest;
 import com.fu.ivsfpi.domain.Mercahnt;
 import com.fu.ivsfpi.domain.User;
 import com.fu.ivsfpi.repository.MercahntRepository;
+import com.fu.ivsfpi.security.AuthoritiesConstants;
 import com.fu.ivsfpi.service.MercahntQueryService;
 import com.fu.ivsfpi.service.MercahntService;
 import com.fu.ivsfpi.service.UserService;
 import com.fu.ivsfpi.service.criteria.MercahntCriteria;
 import com.fu.ivsfpi.service.dto.AdminUserDTO;
 import com.fu.ivsfpi.service.dto.MerchantUserDTO;
-import com.fu.ivsfpi.service.dto.UserDTO;
 import com.fu.ivsfpi.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -222,6 +221,7 @@ public class MercahntResource {
         Optional<AdminUserDTO> adminUserDTO = Optional.of(new AdminUserDTO());
 
         Mercahnt result = new Mercahnt();
+        Set<String> auth = new HashSet<>(Collections.singleton(AuthoritiesConstants.MERCHANT));
 
         if (merchantUserDTO == null) {
             throw new BadRequestAlertException("cant be empty", "404", "400");
@@ -232,7 +232,7 @@ public class MercahntResource {
             adminUserDTO.get().setLastName(merchantUserDTO.getLastName());
             adminUserDTO.get().setActivated(true);
             adminUserDTO.get().setCreatedDate(Instant.now());
-            adminUserDTO.get().setAuthorities(merchantUserDTO.getAuthorities());
+            adminUserDTO.get().setAuthorities(auth);
             Optional<User> newUser = Optional.ofNullable(userService.registerUser(adminUserDTO.get(), "1234"));
 
             if (newUser.isPresent()) {
