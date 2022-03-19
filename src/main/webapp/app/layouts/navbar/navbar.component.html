@@ -1,7 +1,7 @@
 <nav data-cy="navbar" class="navbar navbar-dark navbar-expand-md bg-dark">
   <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
     <span class="logo-img"></span>
-    <span class="navbar-title">IVSFPI_1</span>
+    <span class="navbar-title">حنبنيهو</span>
     <span class="navbar-version">{{ version }}</span>
   </a>
   <a class="navbar-toggler d-lg-none" href="javascript:void(0);" data-toggle="collapse" data-target="#navbarResponsive"
@@ -144,13 +144,13 @@
               <span>Sign in</span>
             </a>
           </li>
-          <li *ngSwitchCase="false">
+          <!-- <li *ngSwitchCase="false">
             <a class="dropdown-item" routerLink="account/register" routerLinkActive="active" (click)="collapseNavbar()"
               data-cy="register">
               <fa-icon icon="user-plus" [fixedWidth]="true"></fa-icon>
               <span>Register</span>
             </a>
-          </li>
+          </li> -->
         </ul>
       </li>
     </ul>

@@ -92,8 +92,11 @@ export class ComplainUpdateComponent implements OnInit {
   }
 
   save(): void {
+
     this.isSaving = true;
     const complain = this.createFromForm();
+    console.log(complain);
+
     if (complain.id !== undefined) {
       this.subscribeToSaveResponse(this.complainService.update(complain));
     } else {
