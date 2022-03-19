@@ -16,7 +16,7 @@ export type EntityArrayResponseType = HttpResponse<IPhone[]>;
 export class PhoneService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/phones');
 
-  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
+  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) { }
 
   create(phone: IPhone): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(phone);
@@ -44,7 +44,11 @@ export class PhoneService {
       .get<IPhone>(`${this.resourceUrl}/${id}`, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
-
+  getPhone(imei: string): Observable<EntityResponseType> {
+    return this.http
+      .get<IPhone>('api/phone' + '/' + imei, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http

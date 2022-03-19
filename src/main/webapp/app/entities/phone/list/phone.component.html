@@ -3,23 +3,29 @@
     <span>Phones</span>
 
     <div class="d-flex justify-content-end">
-      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+      <button class="btn btn-info mr-2" (click)="loadPhone()" [disabled]="isLoading">
         <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-        <span>Refresh List</span>
+        <span>Search</span>
       </button>
 
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity create-phone"
-        [routerLink]="['/phone/new']"
-      >
+      <!-- <button id="jh-create-entity" data-cy="entityCreateButton" class="btn btn-primary jh-create-entity create-phone"
+        [routerLink]="['/phone/new']">
         <fa-icon icon="plus"></fa-icon>
         <span> Create a new Phone </span>
-      </button>
+      </button> -->
     </div>
   </h2>
-
+  <h4>please enter the imei for the phone</h4>
+  <form name="editForm" role="form" novalidate (ngSubmit)="loadPhone()" [formGroup]="editForm">
+    <div class="form-group">
+      <label class="form-control-label" for="field_imei">Imei</label>
+      <input type="text" class="form-control" name="imei" id="field_imei" data-cy="imei" formControlName="imei" />
+      <div *ngIf="editForm.get('imei')!.invalid && (editForm.get('imei')!.dirty || editForm.get('imei')!.touched)">
+        <small class="form-text text-danger" *ngIf="editForm.get('imei')?.errors?.required"> This field is required.
+        </small>
+      </div>
+    </div>
+  </form>
   <jhi-alert-error></jhi-alert-error>
 
   <jhi-alert></jhi-alert>
@@ -28,21 +34,48 @@
     <span>No phones found</span>
   </div>
 
+
+  <button *jhiHasAnyAuthority="'ROLE_ADMIN'" class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+    <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+    <span>loadAll</span>
+  </button>
   <div class="table-responsive" id="entities" *ngIf="phones && phones.length > 0">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
-        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
-          <th scope="col" jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="imei"><span>Imei</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="imei2"><span>Imei 2</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="brand"><span>Brand</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="model"><span>Model</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="color"><span>Color</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="descroptions"><span>Descroptions</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="status"><span>Status</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="verifedBy"><span>Verifed By</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="verifedDate"><span>Verifed Date</span> <fa-icon icon="sort"></fa-icon></th>
-          <th scope="col" jhiSortBy="complain.id"><span>Complain</span> <fa-icon icon="sort"></fa-icon></th>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPhone()">
+          <th scope="col" jhiSortBy="id"><span>ID</span>
+            <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="imei"><span>Imei</span>
+            <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="imei2"><span>Imei 2</span>
+            <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="brand"><span>Brand</span>
+            <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="model"><span>Model</span>
+            <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="color"><span>Color</span>
+            <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="descroptions"><span>Descroptions</span>
+            <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="status"><span>Status</span>
+            <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="verifedBy"><span>Verifed By</span>
+            <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="verifedDate"><span>Verifed Date</span>
+            <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="complain.id"><span>Complain</span>
+            <fa-icon icon="sort"></fa-icon>
+          </th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -67,17 +100,19 @@
           </td>
           <td class="text-right">
             <div class="btn-group">
-              <button type="submit" [routerLink]="['/phone', phone.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+              <button type="submit" [routerLink]="['/phone', phone.id, 'view']" class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton">
                 <fa-icon icon="eye"></fa-icon>
                 <span class="d-none d-md-inline">View</span>
               </button>
 
-              <button type="submit" [routerLink]="['/phone', phone.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+              <!-- <button type="submit" [routerLink]="['/phone', phone.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
                 <fa-icon icon="pencil-alt"></fa-icon>
                 <span class="d-none d-md-inline">Edit</span>
-              </button>
+              </button> -->
 
-              <button type="submit" (click)="delete(phone)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+              <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="submit" (click)="delete(phone)"
+                class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
                 <fa-icon icon="times"></fa-icon>
                 <span class="d-none d-md-inline">Delete</span>
               </button>
@@ -94,15 +129,8 @@
     </div>
 
     <div class="row justify-content-center">
-      <ngb-pagination
-        [collectionSize]="totalItems"
-        [(page)]="ngbPaginationPage"
-        [pageSize]="itemsPerPage"
-        [maxSize]="5"
-        [rotate]="true"
-        [boundaryLinks]="true"
-        (pageChange)="loadPage($event)"
-      ></ngb-pagination>
+      <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5"
+        [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
     </div>
   </div>
 </div>
