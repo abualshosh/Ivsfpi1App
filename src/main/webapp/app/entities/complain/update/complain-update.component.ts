@@ -45,10 +45,10 @@ export class ComplainUpdateComponent implements OnInit {
   }
   newPhone(): FormGroup {
     return this.fb.group({
-      imei: [null, [Validators.required]],
+      imei: [],
       imei2: [],
-      brand: [null, [Validators.required]],
-      model: [null, [Validators.required]],
+      brand: [],
+      model: [],
       color: [],
     })
 
@@ -95,7 +95,6 @@ export class ComplainUpdateComponent implements OnInit {
 
     this.isSaving = true;
     const complain = this.createFromForm();
-    console.log(complain);
 
     if (complain.id !== undefined) {
       this.subscribeToSaveResponse(this.complainService.update(complain));

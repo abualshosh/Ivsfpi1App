@@ -15,15 +15,23 @@
           <tr *ngFor="let item of phones().controls; let i=index" [formGroupName]="i">
             <td>
               imei :
-              <input type="text" formControlName="imei" class="form-control">
+              <input type="number" minlength="15" maxlength="15" formControlName="imei" class="form-control">
             </td>
             <td>
               imei2
-              <input type="text" formControlName="imei2" class="form-control">
+              <input type="number" min="15" max="15" formControlName="imei2" class="form-control">
             </td>
             <td>
               brand:
-              <input type="text" formControlName="brand" class="form-control">
+              <select formControlName="brand">
+                <option value="" selected></option>
+                <option value="samsung">samsung</option>
+                <option value="Iphone">iphone</option>
+                <option value="Huawei">Huawei</option>
+                <option value="Xiaomi">Xiaomi</option>
+
+
+              </select>
             </td>
             <td>
               model:

@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
-import { IMercahnt, Mercahnt } from '../mercahnt.model';
+import { IMercahnt } from '../mercahnt.model';
 import { MercahntService } from '../service/mercahnt.service';
 import { IUser } from 'app/entities/user/user.model';
-import { UserService } from 'app/entities/user/user.service';
 import { IMerchantUserDto, MerchantUserDto } from './merchantUserDTO.model';
 
 @Component({
@@ -17,14 +16,25 @@ import { IMerchantUserDto, MerchantUserDto } from './merchantUserDTO.model';
 })
 export class MercahntUpdateComponent implements OnInit {
   isSaving = false;
+  phoneNumberRegex = /^(?:\+249|00249|249|0)?(\d{9})$/;
+
+
 
 
   editForm = this.fb.group({
-    address: [],
-    phoneNumber: [],
-    firstName: [],
-    lastName: [],
-    email: [],
+    address: ['', Validators.required],
+    phoneNumber: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(10),
+        Validators.pattern(this.phoneNumberRegex),
+      ],
+    ],
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+    email: ['', Validators.required],
 
   });
 

@@ -1,7 +1,7 @@
 <div class="row justify-content-center">
   <div class="col-8">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-      <h2 id="jhi-mercahnt-heading" data-cy="MercahntCreateUpdateHeading">Create or edit a Mercahnt</h2>
+      <h2 id="jhi-mercahnt-heading" data-cy="MercahntCreateUpdateHeading">Create a Merchant</h2>
 
       <div>
         <jhi-alert-error></jhi-alert-error>
@@ -29,8 +29,29 @@
         <div class="form-group">
           <label class="form-control-label" for="field_phoneNumber">Phone Number</label>
           <input type="text" class="form-control" name="phoneNumber" id="field_phoneNumber" data-cy="phoneNumber"
-            formControlName="phoneNumber" />
+            formControlName="phoneNumber" maxlength="10" />
+
+          <div
+            *ngIf="editForm.get('phoneNumber')!.invalid && (editForm.get('phoneNumber')!.dirty || editForm.get('phoneNumber')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('phoneNumber')?.errors?.required"> Your Phone
+              Number is
+              required.
+            </small>
+
+            <small class="form-text text-danger" *ngIf="editForm.get('phoneNumber')?.errors?.minlength">
+              Your Phone Number is required to be at least 10 character.
+            </small>
+
+            <small class="form-text text-danger" *ngIf="editForm.get('phoneNumber')?.errors?.maxlength">
+              Your Phone Number cannot be longer than 00 characters.
+            </small>
+
+            <small class="form-text text-danger" *ngIf="editForm.get('phoneNumber')?.errors?.pattern">
+              Your Phone Number can only contain letters and digits.
+            </small>
+          </div>
         </div>
+
 
         <div class="form-group">
           <label class="form-control-label" for="field_email">Email</label>

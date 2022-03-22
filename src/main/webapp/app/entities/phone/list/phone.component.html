@@ -95,7 +95,7 @@
           <td>{{ phone.verifedDate | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="phone.complain">
-              <a [routerLink]="['/complain', phone.complain?.id, 'view']">{{ phone.complain?.id }}</a>
+              <a [routerLink]="['/complain', phone.complain?.id, 'view']">{{ phone.complain?.complainNumber }}</a>
             </div>
           </td>
           <td class="text-right">

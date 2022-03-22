@@ -4,11 +4,12 @@
   </div>
 
   <div class="col-md-9">
-    <h1 class="display-4"><span>Welcome, to</span> (IVSFPI 1)</h1>
+    <h1 class="display-4"><span>Welcome, to</span> IMEI verification for phone integrity
+    </h1>
 
-    <p class="lead">This is your homepage</p>
+    <p class="lead"></p>
 
-    <div [ngSwitch]="account !== null">Welcome, to (IVSFPI 1)
+    <div [ngSwitch]="account !== null">
       <div class="alert alert-success" *ngSwitchCase="true">
         <span id="home-logged-message" *ngIf="account">You are logged in as user "{{ account.login }}".</span>
       </div>

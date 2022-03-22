@@ -124,7 +124,8 @@ public class PhoneService {
     public Optional<Phone> findOneByImei(String imei) {
         log.debug("Request to get Phone : {}", imei);
         Optional<Phone> phone = phoneRepository.findOneByImeiOrImei2(imei, imei);
-        log.debug("========================= " + phone.toString() +" =======================");
+        log.debug("========================= " + phone.toString() + " =======================");
+
         Optional<Mercahnt> mercahnt = mercahntService.findCurrentMerchant();
         if (phone.isPresent() && mercahnt.isPresent()) {
 
@@ -133,7 +134,7 @@ public class PhoneService {
             phone.get().setVerifedDate(Instant.now());
 
             phone.get().setStatus(PhoneStatus.VERVIED);
-            phone = Optional.of(phoneRepository.saveAndFlush(phone.get()));
+       Optional<Phone> phone2 = Optional.of(phoneRepository.saveAndFlush(phone.get()));
         }
         return phone;
     }
